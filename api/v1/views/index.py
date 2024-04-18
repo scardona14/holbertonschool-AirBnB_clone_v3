@@ -13,11 +13,11 @@ from models.state import State
 from models.user import User
 
 
-
 @app_views.route('/status', strict_slashes=False)
 def status():
     """Return status"""
     return jsonify(status="OK")
+
 
 @app_views.route('/stats', strict_slashes=False)
 def stats():
@@ -30,6 +30,7 @@ def stats():
         states=storage.count('State'),
         users=storage.count('User')
     )
+
 
 def count(cls):
     """Count the number of objects in storage"""

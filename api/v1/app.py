@@ -13,15 +13,18 @@ app = Flask(__name__)
 
 app.register_blueprint(app_views)
 
+
 @app.errorhandler(404)
 def not_found(exception):
     """ Handles 404 """
     return jsonify(error="Not found"), 404
 
+
 @app.teardown_appcontext
 def teardown_db(exception):
     """Remove the current SQLAlchemy Session"""
     storage.close()
+
 
 if __name__ == "__main__":
     host = getenv('HBNB_API_HOST')
