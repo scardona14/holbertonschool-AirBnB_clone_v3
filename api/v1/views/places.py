@@ -9,6 +9,7 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from flasgger.utils import swag_from
+from flask import make_response
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -114,7 +115,8 @@ def put_place(place_id):
         if key not in ignore:
             setattr(place, key, value)
     storage.save()
-    return make_response(jsonify(place.to_dict()), 200)
+    response = make_response(jsonify(place.to_dict()), 200)
+    return response
 
 
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)

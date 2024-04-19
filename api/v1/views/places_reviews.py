@@ -7,6 +7,7 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from flasgger.utils import swag_from
+from flask import make_response
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
