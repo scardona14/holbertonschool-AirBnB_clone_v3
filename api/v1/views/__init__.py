@@ -13,3 +13,7 @@ from api.v1.views.index import *
 
 from api.v1.views.users import *
 """ Importing users module for the API"""
+
+
+from api.v1.views.places_reviews import *
+""" Importing places module for the API"""
