@@ -7,7 +7,7 @@ from models.user import User
 from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
-from flask import abort, jsonify, make_response, request
+from flask import abort, jsonify, request
 from flasgger.utils import swag_from
 
 
