@@ -1,11 +1,29 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify, request, abort
+"""Contains the state routes."""
+from flask import jsonify, request, abort
 from models import storage
 from models.state import State
 from api.v1.views import app_views
 
+@app_views.route('/states', methods=['GET', 'POST'])
+def states():
+    """returns a new state or returns states"""
+    if request.method == 'GET':
+        states_list = storage.all(State).values()
+        return jsonify([state.to_dict() for state in states_list])
+    elif request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            abort(400, 'Not a JSON')
+        if 'name' not in data:
+            abort(400, 'Missing name')
+        new_state = State(**data)
+        new_state.save()
+        return jsonify(new_state.to_dict()), 201
+
 @app_views.route('/states/<state_id>', methods=['GET', 'PUT', 'DELETE'])
-def get_or_delete_state(state_id):
+def state(state_id):
+    """Get, Put, or Deletes state."""
     state = storage.get(State, state_id)
     if not state:
         abort(404)
@@ -27,19 +45,3 @@ def get_or_delete_state(state_id):
         storage.delete(state)
         storage.save()
         return jsonify({}), 200
-
-@app_views.route('/states', methods=['GET', 'POST'])
-def states():
-    if request.method == 'GET':
-        states = storage.all(State).values()
-        return jsonify([state.to_dict() for state in states])
-
-    elif request.method == 'POST':
-        data = request.get_json()
-        if not data:
-            abort(400, 'Not a JSON')
-        if 'name' not in data:
-            abort(400, 'Missing name')
-        new_state = State(**data)
-        new_state.save()
-        return jsonify(new_state.to_dict()), 201
