@@ -6,7 +6,6 @@ from models.city import City
 from models.state import State
 from api.v1.views import app_views
 
-
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
 def cities(state_id):
     """Returns or creates a city based on id"""
@@ -26,15 +25,9 @@ def cities(state_id):
         if 'name' not in data:
             abort(400, 'Missing name')
         
-        # Check if the state exists before creating the city
-        state = storage.get(State, state_id)
-        if not state:
-            abort(404)
-
         new_city = City(state_id=state_id, **data)
         new_city.save()
         return jsonify(new_city.to_dict()), 201
-
 
 @app_views.route('/cities/<city_id>', methods=['GET', 'PUT', 'DELETE'])
 def city_list(city_id):
@@ -60,7 +53,6 @@ def city_list(city_id):
         storage.delete(city)
         storage.save()
         return jsonify({}), 200
-
 
 @app_views.route('/cities', methods=['GET'])
 def get_cities():
