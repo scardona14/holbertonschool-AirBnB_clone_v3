@@ -7,7 +7,6 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from flasgger.utils import swag_from
-from flask import make_response
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
@@ -56,7 +55,7 @@ def delete_review(review_id):
     storage.delete(review)
     storage.save()
 
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'],
@@ -79,7 +78,6 @@ def post_review(place_id):
 
     data = request.get_json()
     user = storage.get(User, data['user_id'])
-
     if not user:
         abort(404)
 
@@ -89,7 +87,7 @@ def post_review(place_id):
     data['place_id'] = place_id
     instance = Review(**data)
     instance.save()
-    return make_response(jsonify(instance.to_dict()), 201)
+    return jsonify(instance.to_dict())
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
@@ -113,4 +111,4 @@ def put_review(review_id):
         if key not in ignore:
             setattr(review, key, value)
     storage.save()
-    return make_response(jsonify(review.to_dict()), 200)
+    return jsonify(review.to_dict()), 200
